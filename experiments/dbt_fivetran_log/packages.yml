@@ -1,0 +1,3 @@
+packages:
+  - package: fivetran/fivetran_log
+    version: [">=2.5.0", "<2.6.0"]

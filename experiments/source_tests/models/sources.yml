@@ -1,0 +1,134 @@
+# A typical source test suite for Fivetran-landed tables: PK unique/not_null,
+# enum accepted_values, FK relationships, ranges, and freshness.
+# Tests on private datasets go in models/private/*.yml (gitignored).
+# Expected failures: none here; see RESULTS.md for the full suite.
+version: 2
+
+sources:
+  - name: fivetran_log
+    database: fl
+    schema: fivetran_log
+    loaded_at_field: _fivetran_synced
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: connection
+        columns:
+          - name: connection_id
+            data_tests: [unique, not_null]
+      - name: account
+        columns:
+          - name: id
+            data_tests: [unique, not_null]
+      - name: destination
+        columns:
+          - name: id
+            data_tests: [unique, not_null]
+      - name: user
+        columns:
+          - name: id
+            data_tests: [unique, not_null]
+      - name: log
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              arguments:
+                combination_of_columns: [id, time_stamp]
+        columns:
+          - name: id
+            data_tests: [not_null]
+          - name: time_stamp
+            data_tests: [not_null]
+          - name: event
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [INFO, WARNING, SEVERE]
+          - name: connection_id
+            data_tests:
+              - relationships:
+                  arguments:
+                    to: source('fivetran_log', 'connection')
+                    field: connection_id
+      - name: incremental_mar
+        columns:
+          - name: measured_date
+            data_tests: [not_null]
+          - name: incremental_rows
+            data_tests:
+              - dbt_utils.accepted_range:
+                  arguments:
+                    min_value: 0
+
+  - name: ticket_data
+    database: fl
+    schema: ticket_data
+    loaded_at_field: _fivetran_synced
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: tickets
+        columns:
+          - name: ticket_id
+            data_tests: [unique, not_null]
+          - name: status
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [Open, Pending, Resolved, Closed]
+          - name: priority
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [Low, Medium, High, Urgent]
+          - name: channel
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [Chat, Email, Phone, Web Form]
+          - name: customer_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('ticket_data', 'customers')
+                    field: customer_id
+          - name: agent_id
+            data_tests:
+              - relationships:
+                  arguments:
+                    to: source('ticket_data', 'agents')
+                    field: agent_id
+          - name: satisfaction_score
+            data_tests:
+              - dbt_utils.accepted_range:
+                  arguments:
+                    min_value: 1
+                    max_value: 5
+          - name: created_at
+            data_tests: [not_null]
+      - name: ticket_messages
+        columns:
+          - name: message_id
+            data_tests: [unique, not_null]
+          - name: ticket_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('ticket_data', 'tickets')
+                    field: ticket_id
+          - name: sender_type
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [agent, customer]
+      - name: customers
+        columns:
+          - name: customer_id
+            data_tests: [unique, not_null]
+      - name: agents
+        columns:
+          - name: agent_id
+            data_tests: [unique, not_null]

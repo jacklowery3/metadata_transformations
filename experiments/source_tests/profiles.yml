@@ -1,0 +1,21 @@
+# Sources are read from the Polaris catalog ATTACHed as `fl`. Env vars come
+# from scripts/polaris_env.py (see run_dbt.sh); OAuth uses the persistent DuckDB
+# secret `polaris_secret` created by scripts/setup_duckdb.py.
+source_tests_bench:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: bench.duckdb
+      threads: "{{ env_var('BENCH_THREADS', '4') | int }}"
+      extensions: [httpfs, avro, iceberg]
+      settings:
+        extension_directory: "{{ env_var('MDT_DUCKDB_EXT_DIR') }}"
+      attach:
+        - path: "{{ env_var('POLARIS_WAREHOUSE') }}"
+          alias: fl
+          type: iceberg
+          secret: polaris_secret
+          options:
+            endpoint: "{{ env_var('POLARIS_ENDPOINT') }}"
+            default_region: "{{ env_var('BUCKET_REGION') }}"

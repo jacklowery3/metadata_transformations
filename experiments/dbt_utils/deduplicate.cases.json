@@ -1,0 +1,7 @@
+[
+  {"table": "ticket_data.tickets", "relation": "fl.ticket_data.tickets", "partition_by": "ticket_id", "order_by": "_fivetran_synced desc"},
+  {"table": "ticket_data.tickets", "relation": "fl.ticket_data.tickets", "partition_by": "ticket_id, status", "order_by": "_fivetran_synced desc"},
+  {"table": "ticket_data.tickets", "relation": "fl.ticket_data.tickets", "partition_by": "customer_id", "order_by": "updated_at desc"},
+  {"table": "fivetran_log.log", "relation": "mirror.fivetran_log.log", "partition_by": "id, time_stamp", "order_by": "_fivetran_synced desc",
+   "note": "local mirror (../dbt_fivetran_log/mirror.duckdb): compute cost without network reads"}
+]

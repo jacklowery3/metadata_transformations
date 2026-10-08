@@ -1,0 +1,14 @@
+packages:
+  - name: fivetran_log
+    package: fivetran/fivetran_log
+    version: 2.5.3
+  - name: fivetran_utils
+    package: fivetran/fivetran_utils
+    version: 0.4.13
+  - name: spark_utils
+    package: dbt-labs/spark_utils
+    version: 0.3.3
+  - name: dbt_utils
+    package: dbt-labs/dbt_utils
+    version: 1.4.1
+sha1_hash: fbb9841bb979a3697cedb126b82d8e067f610cbf

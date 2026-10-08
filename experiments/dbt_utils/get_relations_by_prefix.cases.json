@@ -1,0 +1,6 @@
+[
+  {"schema": "fivetran_log", "prefix": "destination", "exclude": ""},
+  {"schema": "%", "prefix": "source_", "exclude": ""},
+  {"schema": "fivetran_log", "prefix": "source_", "exclude": "%change%"},
+  {"schema": "fivetran%", "prefix": "%_change_event", "exclude": "", "note": "get_relations_by_pattern shape"}
+]

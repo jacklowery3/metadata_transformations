@@ -1,0 +1,30 @@
+# dev:    sources read from the Polaris catalog ATTACHed as `fl` (env from
+#         scripts/polaris_env.py via run_dbt.sh; OAuth via the persistent DuckDB
+#         secret `polaris_secret` from scripts/setup_duckdb.py)
+# mirror: same models, sources read from the metadata-synced local mirror (mirror.py)
+fivetran_log_bench:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: bench.duckdb
+      threads: "{{ env_var('BENCH_THREADS', '4') | int }}"
+      extensions: [httpfs, avro, iceberg]
+      settings:
+        extension_directory: "{{ env_var('MDT_DUCKDB_EXT_DIR') }}"
+      attach:
+        - path: "{{ env_var('POLARIS_WAREHOUSE') }}"
+          alias: fl
+          type: iceberg
+          secret: polaris_secret
+          options:
+            endpoint: "{{ env_var('POLARIS_ENDPOINT') }}"
+            default_region: "{{ env_var('BUCKET_REGION') }}"
+    mirror:
+      type: duckdb
+      path: bench_mirror.duckdb
+      threads: "{{ env_var('BENCH_THREADS', '4') | int }}"
+      attach:
+        - path: mirror.duckdb
+          alias: mirror
+          read_only: true

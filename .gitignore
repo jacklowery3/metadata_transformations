@@ -1,0 +1,20 @@
+.venv*/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.duckdb_ext/
+
+# Private / local-only experiment inputs and raw outputs
+*.local.json
+**/models/private/
+experiments/**/results/
+
+# Build artifacts
+*.duckdb
+*.duckdb.wal
+target/
+dbt_packages/
+logs/
+.user.yml
+experiments/expression_is_true/rust/vendor/

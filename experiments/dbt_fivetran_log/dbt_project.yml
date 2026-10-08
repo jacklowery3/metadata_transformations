@@ -1,0 +1,21 @@
+name: fivetran_log_bench
+version: "1.0.0"
+config-version: 2
+profile: fivetran_log_bench
+
+# Local DuckDB run of fivetran/dbt_fivetran_log against the Polaris-hosted
+# fivetran_log namespace. Sources are READ from the attached Iceberg catalog
+# (alias `fl`); every model is BUILT into the local bench.duckdb file only.
+vars:
+  fivetran_platform_database: fl
+  fivetran_platform_schema: fivetran_log
+  # Sources that don't exist in this catalog
+  fivetran_platform_using_destination_membership: false
+  fivetran_platform_using_transformations: false
+  fivetran_platform__credits_pricing: false
+  fivetran_platform__usage_pricing: false
+
+# Let this project's duckdb__ shims override dbt_utils' defaults
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['fivetran_log_bench', 'dbt_utils']

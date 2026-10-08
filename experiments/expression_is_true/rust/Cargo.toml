@@ -1,0 +1,22 @@
+[package]
+name = "rust_decide"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+exclude = ["vendor"]
+
+[dependencies]
+iceberg = { path = "vendor/iceberg-rust/crates/iceberg" }
+iceberg-catalog-rest = { path = "vendor/iceberg-rust/crates/catalog/rest" }
+iceberg-storage-opendal = { path = "vendor/iceberg-rust/crates/storage/opendal", features = ["opendal-s3"] }
+tokio = { version = "1", features = ["full"] }
+futures = "0.3"
+serde_json = "1"
+regex = "1"
+# iceberg-rust leaves TLS to the application; this enables https for its reqwest too
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+
+[profile.release]
+debug = false

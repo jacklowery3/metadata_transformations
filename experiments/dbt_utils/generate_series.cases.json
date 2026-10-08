@@ -1,0 +1,5 @@
+[
+  {"table": "fivetran_log.connection", "column": "signed_up", "note": "dbt_fivetran_log's spine: min(set_up_at), staged from signed_up"},
+  {"table": "ticket_data.tickets", "column": "created_at"},
+  {"table": "fivetran_log.log", "column": "time_stamp"}
+]

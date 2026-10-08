@@ -1,0 +1,9 @@
+# Pinned to match unified_lake_tables. Private pyiceberg internals are relied
+# on (RestCatalog._session, the metrics evaluators, ArrowScan), so re-verify
+# after any upgrade.
+pyiceberg[pyarrow]==0.11.1
+pyarrow==25.0.1
+duckdb==1.5.6
+PyYAML==6.0.3
+python-dotenv==1.0.1
+requests>=2.32

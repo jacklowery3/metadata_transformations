@@ -1,0 +1,9 @@
+[
+  {"table": "ticket_data.tickets", "expression": "satisfaction_score between 1 and 5"},
+  {"table": "ticket_data.tickets", "expression": "_fivetran_deleted = false"},
+  {"table": "ticket_data.tickets", "expression": "created_at >= '2024-01-01T00:00:00+00:00'",
+   "sql": "created_at >= TIMESTAMPTZ '2024-01-01 00:00:00+00'"},
+  {"table": "ticket_data.tickets", "expression": "resolved_at >= created_at"},
+  {"table": "fivetran_log.log", "expression": "connection_id is not null"},
+  {"table": "fivetran_log.log", "expression": "event in ('INFO', 'WARNING', 'SEVERE')"}
+]

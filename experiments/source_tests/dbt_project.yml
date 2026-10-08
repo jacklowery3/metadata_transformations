@@ -1,0 +1,4 @@
+name: source_tests_bench
+version: "1.0.0"
+config-version: 2
+profile: source_tests_bench
